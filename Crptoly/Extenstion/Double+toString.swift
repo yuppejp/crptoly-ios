@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Mark: for bitbank
 extension Double {
     var toCurrency: String {
         let f = NumberFormatter()
@@ -61,3 +62,31 @@ extension Double {
         return f.string(from: NSNumber(value: self)) ?? "\(self)"
     }
 }
+
+// Mark: for bybit
+extension Double {
+    var toDecimalString: String {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.minimumFractionDigits = 2 // 1234.5 -> 1,234.50
+        f.maximumFractionDigits = 2 // 1234.567 -> 1,234.57
+        return f.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
+
+    var toIntegerString: String {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.minimumFractionDigits = 0 // 1234.5 -> 1,235
+        f.maximumFractionDigits = 0 // 1234.567 -> 1,235
+        return f.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
+
+    var toPercentString: String {
+        let f = NumberFormatter()
+        f.numberStyle = .percent
+        f.minimumFractionDigits = 0
+        f.maximumFractionDigits = 1
+        return f.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
+}
+
