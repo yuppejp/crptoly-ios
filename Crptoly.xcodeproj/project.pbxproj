@@ -13,6 +13,12 @@
 		5617A64928AC905F00910B9E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5617A64828AC905F00910B9E /* Preview Assets.xcassets */; };
 		5617A64B28AC905F00910B9E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5617A64A28AC905F00910B9E /* Persistence.swift */; };
 		5617A64E28AC905F00910B9E /* Crptoly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5617A64C28AC905F00910B9E /* Crptoly.xcdatamodeld */; };
+		5617A65628ACB4F900910B9E /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5617A65528ACB4F900910B9E /* CryptoSwift */; };
+		5617A65928ACB53200910B9E /* BitbankModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5617A65828ACB53200910B9E /* BitbankModel.swift */; };
+		5617A65B28ACB58E00910B9E /* BitbankResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5617A65A28ACB58E00910B9E /* BitbankResponse.swift */; };
+		5617A65D28ACB71900910B9E /* ApiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5617A65C28ACB71900910B9E /* ApiKey.swift */; };
+		5617A65F28ACB73C00910B9E /* ApiKey.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5617A65E28ACB73C00910B9E /* ApiKey.plist */; };
+		5617A66228ACB7E000910B9E /* Double+toString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5617A66128ACB7E000910B9E /* Double+toString.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +29,11 @@
 		5617A64828AC905F00910B9E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5617A64A28AC905F00910B9E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		5617A64D28AC905F00910B9E /* Crptoly.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Crptoly.xcdatamodel; sourceTree = "<group>"; };
+		5617A65828ACB53200910B9E /* BitbankModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitbankModel.swift; sourceTree = "<group>"; };
+		5617A65A28ACB58E00910B9E /* BitbankResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitbankResponse.swift; sourceTree = "<group>"; };
+		5617A65C28ACB71900910B9E /* ApiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKey.swift; sourceTree = "<group>"; };
+		5617A65E28ACB73C00910B9E /* ApiKey.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKey.plist; sourceTree = "<group>"; };
+		5617A66128ACB7E000910B9E /* Double+toString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+toString.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5617A65628ACB4F900910B9E /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +67,8 @@
 		5617A64028AC905F00910B9E /* Crptoly */ = {
 			isa = PBXGroup;
 			children = (
+				5617A66028ACB7BD00910B9E /* Extenstion */,
+				5617A65728ACB52100910B9E /* Model */,
 				5617A64128AC905F00910B9E /* CrptolyApp.swift */,
 				5617A64328AC905F00910B9E /* ContentView.swift */,
 				5617A64528AC905F00910B9E /* Assets.xcassets */,
@@ -73,6 +87,25 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		5617A65728ACB52100910B9E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5617A65828ACB53200910B9E /* BitbankModel.swift */,
+				5617A65A28ACB58E00910B9E /* BitbankResponse.swift */,
+				5617A65C28ACB71900910B9E /* ApiKey.swift */,
+				5617A65E28ACB73C00910B9E /* ApiKey.plist */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5617A66028ACB7BD00910B9E /* Extenstion */ = {
+			isa = PBXGroup;
+			children = (
+				5617A66128ACB7E000910B9E /* Double+toString.swift */,
+			);
+			path = Extenstion;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -89,6 +122,9 @@
 			dependencies = (
 			);
 			name = Crptoly;
+			packageProductDependencies = (
+				5617A65528ACB4F900910B9E /* CryptoSwift */,
+			);
 			productName = Crptoly;
 			productReference = 5617A63E28AC905F00910B9E /* Crptoly.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +153,9 @@
 				Base,
 			);
 			mainGroup = 5617A63528AC905F00910B9E;
+			packageReferences = (
+				5617A65428ACB4F900910B9E /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+			);
 			productRefGroup = 5617A63F28AC905F00910B9E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -131,6 +170,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5617A65F28ACB73C00910B9E /* ApiKey.plist in Resources */,
 				5617A64928AC905F00910B9E /* Preview Assets.xcassets in Resources */,
 				5617A64628AC905F00910B9E /* Assets.xcassets in Resources */,
 			);
@@ -143,9 +183,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5617A66228ACB7E000910B9E /* Double+toString.swift in Sources */,
 				5617A64B28AC905F00910B9E /* Persistence.swift in Sources */,
+				5617A65928ACB53200910B9E /* BitbankModel.swift in Sources */,
 				5617A64E28AC905F00910B9E /* Crptoly.xcdatamodeld in Sources */,
 				5617A64428AC905F00910B9E /* ContentView.swift in Sources */,
+				5617A65D28ACB71900910B9E /* ApiKey.swift in Sources */,
+				5617A65B28ACB58E00910B9E /* BitbankResponse.swift in Sources */,
 				5617A64228AC905F00910B9E /* CrptolyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,6 +395,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5617A65428ACB4F900910B9E /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5617A65528ACB4F900910B9E /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5617A65428ACB4F900910B9E /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		5617A64C28AC905F00910B9E /* Crptoly.xcdatamodeld */ = {
