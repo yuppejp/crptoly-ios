@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+
 import CryptoSwift
 
 private let publicEndpoint = "https://public.bitbank.cc"
