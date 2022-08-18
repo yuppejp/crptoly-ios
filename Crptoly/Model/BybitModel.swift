@@ -13,31 +13,42 @@ private let endpoint = "https://api.bybit.com"
 private let api_key = ApiKey().getStringValue("BybitApiKey")
 private let apiSecret = ApiKey().getStringValue("BybitApiSecret")
 
-struct BybitWalletBalance {
+class BybitAmount: Amount {
     var USDJPY = 0.0 // 米ドル円レート: 買気配(Bid)
     var spot = Amount() // 現物資産
     var derivatives = Amount() // デリバティブ資産
     var staking = Amount() // ステーキング資産
-    var total = Amount() // 合計資産
 
-    struct Amount {
-        var lastAmount = 0.0  // 最新の評価額(USD換算)
-        var openAmount = 0.0   // 14h前の評価額(USD換算)
+    override init() {
+        super.init()
+    }
+    
+    init(USDJPY: Double, spot: Amount, derivatives: Amount, staking: Amount) {
+        self.USDJPY = USDJPY
+        self.spot = spot
+        self.derivatives = derivatives
+        self.staking = staking
+        
+        super.init()
+        self.last = (spot.last + derivatives.last + staking.last) * USDJPY
+        self.open = (spot.open + derivatives.open + staking.open) * USDJPY
     }
 }
 
-struct BybitModel {
-    
-    func fetch(completion: @escaping (BybitWalletBalance) -> ()) {
+class BybitModel {
+    func fetch(completion: @escaping (BybitAmount) -> ()) {
         self.fetchData(completion: { exchangeRate, spotWallet, spotTickers, derivativesWallet in
-            var wallet = BybitWalletBalance()
-            
+            var USDJPY = 0.0
+            let spot = Amount()
+            let derivatives = Amount()
+            let staking = Amount()
+
             print("--- USDJPY ----------")
             let rates = exchangeRate.quotes
             for rate in rates {
                 if rate.currencyPairCode == "USDJPY" {
-                    wallet.USDJPY = Double(rate.bid) ?? 0.0
-                    print("USDJPY: \(wallet.USDJPY)")
+                    USDJPY = Double(rate.bid) ?? 0.0
+                    print("USDJPY: \(USDJPY)")
                     break
                 }
             }
@@ -52,15 +63,15 @@ struct BybitModel {
                                 let lastAmount = total * lastPrice
                                 let openAmount = total * openPrice
                                 print("coin: \(balance.coin), total: \(balance.total), lastAmount: \(lastAmount), openAmount: \(openAmount)")
-                                wallet.spot.lastAmount += lastAmount
-                                wallet.spot.openAmount += openAmount
+                                spot.last += lastAmount
+                                spot.open += openAmount
                             }
                             break
                         }
                     }
                 }
             }
-            print("spot.lastAmount: \(wallet.spot.lastAmount), spot.openAmount: \(wallet.spot.openAmount)")
+            print("spot.lastAmount: \(spot.last), spot.openAmount: \(spot.open)")
 
             print("--- delivatives ----------")
             if let coins = derivativesWallet.result {
@@ -69,15 +80,15 @@ struct BybitModel {
                         if value.key == "equity" {
                             let equity: Double = value.value
                             print("\(coin.key): \(equity)")
-                            wallet.derivatives.lastAmount += equity
+                            derivatives.last += equity
                             // デリバティブはopne値が無いので、とりあえず同じ値を入れておく
-                            wallet.derivatives.openAmount = wallet.derivatives.lastAmount
+                            derivatives.open = derivatives.last
                             break
                         }
                     }
                 }
             }
-            print("derivatives.lastAmount: \(wallet.derivatives.lastAmount)")
+            print("derivatives.lastAmount: \(derivatives.last)")
 
 
             print("--- staking ----------")
@@ -93,21 +104,19 @@ struct BybitModel {
                                 let lastAmount = total * lastPrice
                                 let openAmount = total * openPrice
                                 print("coin: \(coin), total: \(total), lastAmount: \(lastAmount), openAmount: \(openAmount)")
-                                wallet.staking.lastAmount += lastAmount
-                                wallet.staking.openAmount += openAmount
+                                staking.last += lastAmount
+                                staking.open += openAmount
                             }
                             break
                         }
                     }
                 }
             }
-            print("staking.lastAmount: \(wallet.staking.lastAmount), staking.openAmount: \(wallet.staking.openAmount)")
+            print("staking.lastAmount: \(staking.last), staking.openAmount: \(staking.open)")
 
             print("--- total ----------")
-            wallet.total.lastAmount = wallet.spot.lastAmount + wallet.derivatives.lastAmount + wallet.staking.lastAmount
-            wallet.total.openAmount = wallet.spot.openAmount + wallet.derivatives.openAmount + wallet.staking.openAmount
-            print("total.lastAmount: \(wallet.total.lastAmount), total.openAmount: \(wallet.total.openAmount)")
-            
+            let wallet = BybitAmount(USDJPY: USDJPY, spot: spot, derivatives: derivatives, staking: staking)
+
             completion(wallet)
         })
     }

@@ -12,19 +12,20 @@ import Intents
 
 struct Entry: TimelineEntry {
     var date: Date
-    var info: UserAssetsInfo
+    var wallet: WalletAmount
 }
 
 struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) {
-        let loadingData = Entry(date: Date(), info: UserAssetsInfo())
+        let loadingData = Entry(date: Date(), wallet: WalletAmount())
         completion(loadingData)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        BitbankModel.shared.fetch(completion: { info in
+        let model = WalletModel()
+        model.fetch(completion: { wallet in
             let date = Date()
-            let entry = Entry(date: date, info: info)
+            let entry = Entry(date: date, wallet: wallet)
             let nextUpdate = Calendar.current.date(byAdding: .minute, value: 10, to: date)
             let timeline = Timeline(entries: [entry], policy: .after(nextUpdate!))
             completion(timeline)
@@ -32,7 +33,7 @@ struct Provider: TimelineProvider {
     }
 
     func placeholder(in context: Context) -> Entry {
-        let loadingData = Entry(date: Date(), info: UserAssetsInfo())
+        let loadingData = Entry(date: Date(), wallet: WalletAmount())
         return loadingData
     }
 }
@@ -49,6 +50,8 @@ struct WidgetContentView: View {
             WidgetView(entry: entry)
         case .systemLarge:
             WidgetView(entry: entry)
+        case .systemExtraLarge:
+            WidgetView(entry: entry)
         default:
             Text("Default")
         }
@@ -57,68 +60,87 @@ struct WidgetContentView: View {
 
 struct WidgetView: View {
     var entry: Entry
+    
     var body: some View {
         VStack(spacing: 0) {
             Text(entry.date, style: .time)
-                .font(.caption)
-                .padding(.top, 8)
+                .font(.caption2)
 
-            Spacer()
-
-            Text(entry.info.getTotalLastAmount().toComma)
-                .font(.title)
-            
-            Spacer()
-                .frame(height: .infinity) // 余白対策
-
-            NumberRateView(
-                number: entry.info.getTotalDelta(),
-                rate: entry.info.getTotalRate())
-            NumberRateView(
-                number: entry.info.getTotalLastAmountDelta(),
-                rate: entry.info.getTotalLastAmountRate())
-
-            Spacer()
-                .frame(height: .infinity) // 余白対策
-        }
-    }
-}
-
-struct NumberRateView: View {
-    let number: Double
-    let rate: Double
-
-    var body: some View {
-        GeometryReader { view in
             HStack(spacing: 0) {
-                Text(number.toCommaWithSign)
-                    .font(.caption)
-                    .frame(maxWidth: view.size.width * 0.65, alignment: .trailing)
-                    .padding(.leading, 8)
+                Text((entry.wallet.equityRatio * 100).toDecimalString)
+                    .font(.title2)
+                    .frame(alignment: .leading)
+                VStack {
+                    Spacer()
+                    Text("%")
+                        .font(.caption2)
+                        .frame(alignment: .leading)
+                }
+                VStack(spacing: 0) {
+                    Text(entry.wallet.last.toIntegerString)
+                        .font(.caption2)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    Text(entry.wallet.equity.toIntegerString)
+                        .font(.caption2)
+                        .foregroundColor(entry.wallet.equity.toColor)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            }
+            Divider()
+            Spacer()
 
-                Spacer()
+            WalletItemView(amount: entry.wallet.bitbank, image: "bitbank")
+            Divider()
+            Spacer()
+            WalletItemView(amount: entry.wallet.bybit, image: "bybit")
 
-                Text(rate.toPercent)
-                    .padding(.horizontal, 4)
-                    .font(.caption)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: view.size.width * 0.35, alignment: .trailing)
-                    .background(getColor(rate))
-                    .cornerRadius(4)
-                    .padding(.trailing, 8)
+            Spacer()
+        }
+        .padding(8)
+    }
+
+    private struct WalletItemView: View {
+        let amount: Amount
+        let image: String
+        
+        var body: some View {
+            GeometryReader { geometry in
+                HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        Image(image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: geometry.size.width * 0.15, alignment: .trailing)
+                            .cornerRadius(4)
+                        Spacer()
+                    }
+
+                    VStack(spacing: 0) {
+                        Text(amount.lastDelta.toIntegerString)
+                            .font(.caption2)
+                            .foregroundColor(amount.lastDelta.toColor)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        Text(amount.lastRatio.toPercentString)
+                            .font(.caption2)
+                            .foregroundColor(amount.lastRatio.toColor)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        Spacer()
+                    }
+
+                    VStack(spacing: 0) {
+                        Text(amount.last.toIntegerString)
+                            .font(.caption2)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        Text(amount.equityRatio.toPercentString)
+                            .font(.caption2)
+                            .foregroundColor(amount.equityRatio.toColor)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        Spacer()
+                    }
+                }
             }
         }
-        //.frame(height: 20) // 余白対策
     }
-    
-    func getColor(_ number: Double) -> Color {
-        if number >= 0 {
-            return Color.green
-        } else {
-            return Color.red
-        }
-    }
-    
 }
 
 @main
@@ -126,15 +148,22 @@ struct CrptolyWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "Kind", provider: Provider(), content: { entry in
             WidgetContentView(entry: entry)
-        }).description(Text("Description")).configurationDisplayName(Text("configurationDisplayName"))
-            .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        }).description(Text("保有コイン数から現在の評価額を表示します"))
+            .configurationDisplayName(Text("運用資産の概算"))
+            .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
     }
 }
 
 struct CrptolyWidget_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetContentView(entry: Entry(date: Date(), info: UserAssetsInfo()))
+        WidgetContentView(entry: Entry(date: Date(), wallet: WalletAmount()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
+        WidgetContentView(entry: Entry(date: Date(), wallet: WalletAmount()))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+        WidgetContentView(entry: Entry(date: Date(), wallet: WalletAmount()))
+            .previewContext(WidgetPreviewContext(family: .systemLarge))
+        WidgetContentView(entry: Entry(date: Date(), wallet: WalletAmount()))
+            .previewContext(WidgetPreviewContext(family: .systemExtraLarge))
     }
 }
 //struct Provider: IntentTimelineProvider {

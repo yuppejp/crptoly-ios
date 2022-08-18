@@ -36,6 +36,8 @@
 		5664511A28ACC4CC00FEBB32 /* BybitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664511828ACC4CC00FEBB32 /* BybitModel.swift */; };
 		5664511C28ACC4EB00FEBB32 /* BybitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */; };
 		5664511D28ACC4EB00FEBB32 /* BybitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */; };
+		56DE229528ADD4F500832068 /* WalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DE229428ADD4F500832068 /* WalletModel.swift */; };
+		56DE229628ADD4F500832068 /* WalletModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DE229428ADD4F500832068 /* WalletModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,7 @@
 		5617A67328ACBBB900910B9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5664511828ACC4CC00FEBB32 /* BybitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitModel.swift; sourceTree = "<group>"; };
 		5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitResponse.swift; sourceTree = "<group>"; };
+		56DE229428ADD4F500832068 /* WalletModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,12 +156,13 @@
 		5617A65728ACB52100910B9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5617A65E28ACB73C00910B9E /* ApiKey.plist */,
-				5617A65C28ACB71900910B9E /* ApiKey.swift */,
+				56DE229428ADD4F500832068 /* WalletModel.swift */,
 				5617A65828ACB53200910B9E /* BitbankModel.swift */,
 				5617A65A28ACB58E00910B9E /* BitbankResponse.swift */,
 				5664511828ACC4CC00FEBB32 /* BybitModel.swift */,
 				5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */,
+				5617A65C28ACB71900910B9E /* ApiKey.swift */,
+				5617A65E28ACB73C00910B9E /* ApiKey.plist */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -306,6 +310,7 @@
 				5617A67528ACBBB900910B9E /* CrptolyWidget.intentdefinition in Sources */,
 				5617A66228ACB7E000910B9E /* Double+toString.swift in Sources */,
 				5617A64B28AC905F00910B9E /* Persistence.swift in Sources */,
+				56DE229528ADD4F500832068 /* WalletModel.swift in Sources */,
 				5617A65928ACB53200910B9E /* BitbankModel.swift in Sources */,
 				5664511928ACC4CC00FEBB32 /* BybitModel.swift in Sources */,
 				5617A64E28AC905F00910B9E /* Crptoly.xcdatamodeld in Sources */,
@@ -327,6 +332,7 @@
 				5617A67E28ACBC2100910B9E /* BitbankResponse.swift in Sources */,
 				5617A68028ACBC4300910B9E /* Double+toString.swift in Sources */,
 				5664511A28ACC4CC00FEBB32 /* BybitModel.swift in Sources */,
+				56DE229628ADD4F500832068 /* WalletModel.swift in Sources */,
 				5617A66F28ACBBB800910B9E /* CrptolyWidget.swift in Sources */,
 				5664511D28ACC4EB00FEBB32 /* BybitResponse.swift in Sources */,
 			);
