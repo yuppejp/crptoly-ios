@@ -26,15 +26,15 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 0) {
+                VStack() {
                     RefreshControl(coordinateSpaceName: "RefreshControl", onRefresh: {
                         print("doRefresh()")
                         viewModel.update()
                     })
-                    
                     Text("Wallet Balance")
                         .font(.title)
-                    
+                    Text(Date(), style: .time)
+                        .font(.caption)
                     WalletBalanceView(wallet: viewModel.wallet)
                         .frame(minHeight: geometry.size.height * 0.9)
                 }
@@ -44,82 +44,84 @@ struct ContentView: View {
             viewModel.update()
         }
     }
-}
-
-struct WalletBalanceView: View {
-    var wallet: WalletAmount
     
-    var body: some View {
-        List() {
-            Section(header: Text("資産合計")) {
-                ListItemView(name: "BTC換算", value: wallet.last.toIntegerString + " 円")
-                ListItemView(name: "24時間増減額", value: wallet.lastDelta.toIntegerString + " 円")
-                ListItemView(name: "増減比", value: wallet.lastRatio.toPercentString)
-            }
-            Section(header: Text("bitbank")) {
-                ListItemView(name: "評価額", value: wallet.bitbank.last.toIntegerString + " 円")
-                ListItemView(name: "24時間増減額", value: wallet.bitbank.lastDelta.toIntegerString + " 円")
-                ListItemView(name: "増減比", value: wallet.bitbank.lastRatio.toPercentString)
-            }
-            Section(header: Text("Bybit")) {
-                ListItemView(name: "評価額", value: wallet.bybit.last.toIntegerString + " 円")
-                ListItemView(name: "24時間増減額", value: wallet.bybit.lastDelta.toIntegerString + " 円")
-                ListItemView(name: "増減比", value: wallet.bybit.lastRatio.toPercentString)
-                ListItemView(name: "米ドル円レート", value: wallet.bybit.USDJPY.toDecimalString + " 円")
-            }
-        }
-    }
-
-}
-
-struct ListItemView: View {
-    var name: String
-    var value: String
-    
-    var body: some View {
-        HStack(spacing: 0) {
-            Text(name)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(value)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }
-    }
-}
-
-struct RefreshControl: View {
-    @State private var isRefreshing = false
-    var coordinateSpaceName: String
-    var onRefresh: () -> Void
-    let haptics = UINotificationFeedbackGenerator()
-    
-    var body: some View {
-        GeometryReader { geometry in
-            if geometry.frame(in: .named(coordinateSpaceName)).midY > 30 {
-                Spacer()
-                    .onAppear() {
-                        haptics.notificationOccurred(.success) // 触覚フィードバック
-                        isRefreshing = true
-                    }
-            } else if geometry.frame(in: .named(coordinateSpaceName)).maxY < 10 {
-                Spacer()
-                    .onAppear() {
-                        if isRefreshing {
-                            isRefreshing = false
-                            onRefresh()
-                        }
-                    }
-            }
-            HStack {
-                Spacer()
-                if isRefreshing {
-                    ProgressView()
-                } else {
-                    Text("↓")
-                        .font(.system(size: 28))
+    private struct WalletBalanceView: View {
+        var wallet: WalletAmount
+        
+        var body: some View {
+            List() {
+                Section(header: Text("資産合計")) {
+                    ListItemView(name: "評価額", value: wallet.last.toIntegerString + " 円")
+                    ListItemView(name: "投資額", value: wallet.investment.toIntegerString + " 円")
+                    ListItemView(name: "損益", value: wallet.equity.toIntegerString + " 円")
+                    ListItemView(name: "損益率", value: wallet.equityRatio.toPercentString)
+                    ListItemView(name: "24時間増減額", value: wallet.lastDelta.toIntegerString + " 円")
+                    ListItemView(name: "増減比", value: wallet.lastRatio.toPercentString)
                 }
-                Spacer()
+                Section(header: Text("bitbank")) {
+                    ListItemView(name: "評価額", value: wallet.bitbank.last.toIntegerString + " 円")
+                    ListItemView(name: "24時間増減額", value: wallet.bitbank.lastDelta.toIntegerString + " 円")
+                    ListItemView(name: "増減率", value: wallet.bitbank.lastRatio.toPercentString)
+                }
+                Section(header: Text("Bybit")) {
+                    ListItemView(name: "評価額", value: wallet.bybit.last.toIntegerString + " 円")
+                    ListItemView(name: "24時間増減額", value: wallet.bybit.lastDelta.toIntegerString + " 円")
+                    ListItemView(name: "増減率", value: wallet.bybit.lastRatio.toPercentString)
+                    ListItemView(name: "米ドル円レート", value: wallet.bybit.USDJPY.toDecimalString + " 円")
+                }
             }
-        }.padding(.top, -50)
+        }
+
+        private struct ListItemView: View {
+            var name: String
+            var value: String
+            
+            var body: some View {
+                HStack(spacing: 0) {
+                    Text(name)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(value)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            }
+        }
+    }
+    
+    private struct RefreshControl: View {
+        @State private var isRefreshing = false
+        var coordinateSpaceName: String
+        var onRefresh: () -> Void
+        let haptics = UINotificationFeedbackGenerator()
+        
+        var body: some View {
+            GeometryReader { geometry in
+                if geometry.frame(in: .named(coordinateSpaceName)).midY > 30 {
+                    Spacer()
+                        .onAppear() {
+                            haptics.notificationOccurred(.success) // 触覚フィードバック
+                            isRefreshing = true
+                        }
+                } else if geometry.frame(in: .named(coordinateSpaceName)).maxY < 10 {
+                    Spacer()
+                        .onAppear() {
+                            if isRefreshing {
+                                isRefreshing = false
+                                onRefresh()
+                            }
+                        }
+                }
+                HStack {
+                    Spacer()
+                    if isRefreshing {
+                        ProgressView()
+                    } else {
+                        Text("↓")
+                            .font(.system(size: 28))
+                    }
+                    Spacer()
+                }
+            }.padding(.top, -50)
+        }
     }
 }
 

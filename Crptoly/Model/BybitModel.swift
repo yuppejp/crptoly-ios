@@ -33,6 +33,10 @@ class BybitAmount: Amount {
         self.last = (spot.last + derivatives.last + staking.last) * USDJPY
         self.open = (spot.open + derivatives.open + staking.open) * USDJPY
     }
+    
+    var allAmountUSD: Double {
+        return spot.last + derivatives.last + staking.last
+    }
 }
 
 class BybitModel {
@@ -81,7 +85,7 @@ class BybitModel {
                             let equity: Double = value.value
                             print("\(coin.key): \(equity)")
                             derivatives.last += equity
-                            // デリバティブはopne値が無いので、とりあえず同じ値を入れておく
+                            // デリバティブはopen値が無いので、とりあえず同じ値を入れておく
                             derivatives.open = derivatives.last
                             break
                         }
@@ -93,6 +97,7 @@ class BybitModel {
 
             print("--- staking ----------")
             // APYは無視して評価額ベースで簡易的に算出
+            // TODO: 設定化
             let coins: Dictionary = ["AVAX": 3.420576]
             for coin in coins {
                 let symbol = coin.key + "USDT"

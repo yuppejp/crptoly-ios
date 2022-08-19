@@ -44,9 +44,11 @@ extension Double {
 
     var toColor: Color {
         if self >= 0 {
-            return Color.primary
+            let green = Color(red: 36/255, green: 120/255, blue: 74/255)
+            return green
         } else {
-            return Color.red
+            let red = Color(red: 220/255, green: 43/255, blue: 32/255)
+            return red
         }
     }
 }
