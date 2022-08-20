@@ -16,66 +16,33 @@ private let privateEndpoint = "https://api.bitbank.cc"
 private let apiKey = ApiKey().getStringValue("BitbankApiKey") // bitbankのポータルサイトで取得したAPIキー
 private let apiSecret = ApiKey().getStringValue("BitbankApiSecret") // bitbankのポータルサイトで取得したシークレット
 
-private struct UserAsset {
-    var asset: BitbankAsset
-    var ticker: BitbankTicker
-    
-    init(asset: BitbankAsset, ticker: BitbankTicker) {
-        self.asset = asset
-        self.ticker = ticker
-    }
-    
-    func getAsseetName() -> String {
-        return asset.asset
-    }
-    
-    // 現在の評価額
-    func getLastAmount() -> Double {
-        var amount = 0.0
-        if let last = Double(ticker.last), let onhandAmount = Double(asset.onhandAmount) {
-            if asset.asset == "jpy" {
-                amount = onhandAmount
-            } else {
-                amount = last * onhandAmount
-            }
-        }
-        return amount
-    }
-
-    // 24時間前の評価額
-    func getOpenAmount() -> Double {
-        var amount = 0.0
-        if let open = Double(ticker.datumOpen), let onhandAmount = Double(asset.onhandAmount) {
-            if asset.asset == "jpy" {
-                amount = onhandAmount
-            } else {
-                amount = open * onhandAmount
-            }
-        }
-        return amount
-    }
-}
-
 struct BitbankModel {
-    func fetch(completion: @escaping (Amount) -> ()) {
+    func fetch(completion: @escaping (AccountAsset) -> ()) {
         fetchData(completion: { result1, result2 in
             let bitbankAssets = result1.data.assets
             let bitbankTickers = result2.data
-            let wallet = Amount()
+            var asset = Asset()
             
-            for asset in bitbankAssets {
+            for bitbankAsset in bitbankAssets {
                 for ticker in bitbankTickers {
-                    let pair = asset.asset + "_jpy"
+                    let pair = bitbankAsset.asset + "_jpy"
                     if (ticker.pair == pair) {
-                        let userAsset = UserAsset(asset: asset, ticker: ticker)
-                        wallet.last += userAsset.getLastAmount()
-                        wallet.open += userAsset.getOpenAmount()
+                        let symbol = bitbankAsset.asset
+                        let pair = "JPY"
+                        let lastPrice = bitbankAsset.asset == "jpy" ? 1.0 : Double(ticker.last) ?? 0.0
+                        let openPrice = bitbankAsset.asset == "jpy" ? 1.0 : Double(ticker.datumOpen) ?? 0.0
+                        let ticker = Ticker(symbol: symbol, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
+                        
+                        let balance = Double(bitbankAsset.onhandAmount) ?? 0.0
+                        let coin = Coin(ticker: ticker, balance: balance)
+                        asset.coins.append(coin)
                         break
                     }
                 }
             }
             
-            completion(wallet)
+            let account = AccountAsset(accountName: "bitbank", spot: asset)
+            completion(account)
         })
     }
     

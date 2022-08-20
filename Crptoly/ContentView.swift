@@ -10,12 +10,12 @@ import SwiftUI
 import CoreData
 
 class ContentViewModel: ObservableObject {
-    private let model = WalletModel()
-    @Published var wallet = WalletAmount()
+    private let model = AssetsModel()
+    @Published var assets = TotalAssets()
     
     func update() {
-        model.fetch(completion: { (wallet) in
-            self.wallet = wallet
+        model.fetch(completion: { (assets) in
+            self.assets = assets
         })
     }
 }
@@ -35,7 +35,7 @@ struct ContentView: View {
                         .font(.title)
                     Text(Date(), style: .time)
                         .font(.caption)
-                    WalletBalanceView(wallet: viewModel.wallet)
+                    AssetsView(assets: viewModel.assets)
                         .frame(minHeight: geometry.size.height * 0.9)
                 }
             }
@@ -45,29 +45,33 @@ struct ContentView: View {
         }
     }
     
-    private struct WalletBalanceView: View {
-        var wallet: WalletAmount
+    private struct AssetsView: View {
+        var assets: TotalAssets
+        private var accounts: [IdentifiableAccount] = []
+        
+        init(assets: TotalAssets) {
+            self.assets = assets
+            for account in assets.accounts {
+                self.accounts.append(IdentifiableAccount(account: account))
+            }
+        }
         
         var body: some View {
             List() {
                 Section(header: Text("資産合計")) {
-                    ListItemView(name: "評価額", value: wallet.last.toIntegerString + " 円")
-                    ListItemView(name: "投資額", value: wallet.investment.toIntegerString + " 円")
-                    ListItemView(name: "損益", value: wallet.equity.toIntegerString + " 円")
-                    ListItemView(name: "損益率", value: wallet.equityRatio.toPercentString)
-                    ListItemView(name: "24時間増減額", value: wallet.lastDelta.toIntegerString + " 円")
-                    ListItemView(name: "増減比", value: wallet.lastRatio.toPercentString)
+                    ListItemView(name: "評価額", value: assets.lastAmount.toIntegerString + " 円")
+                    ListItemView(name: "投資額", value: assets.investmentAmount.toIntegerString + " 円")
+                    ListItemView(name: "損益", value: assets.equity.toIntegerString + " 円")
+                    ListItemView(name: "損益率", value: assets.equityRatio.toPercentString)
+                    ListItemView(name: "24時間増減額", value: assets.lastAmountDelta.toIntegerString + " 円")
+                    ListItemView(name: "増減比", value: assets.lastAmountRatio.toPercentString)
                 }
-                Section(header: Text("bitbank")) {
-                    ListItemView(name: "評価額", value: wallet.bitbank.last.toIntegerString + " 円")
-                    ListItemView(name: "24時間増減額", value: wallet.bitbank.lastDelta.toIntegerString + " 円")
-                    ListItemView(name: "増減率", value: wallet.bitbank.lastRatio.toPercentString)
-                }
-                Section(header: Text("Bybit")) {
-                    ListItemView(name: "評価額", value: wallet.bybit.last.toIntegerString + " 円")
-                    ListItemView(name: "24時間増減額", value: wallet.bybit.lastDelta.toIntegerString + " 円")
-                    ListItemView(name: "増減率", value: wallet.bybit.lastRatio.toPercentString)
-                    ListItemView(name: "米ドル円レート", value: wallet.bybit.USDJPY.toDecimalString + " 円")
+                ForEach(accounts) { account in
+                    Section(header: Text(account.account.accountName)) {
+                        ListItemView(name: "評価額", value: account.account.lastAmount.toIntegerString + " 円")
+                        ListItemView(name: "24時間増減額", value: account.account.lastAmountDelta.toIntegerString + " 円")
+                        ListItemView(name: "増減率", value: account.account.lastAmountRatio.toPercentString)
+                    }
                 }
             }
         }
@@ -84,6 +88,11 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
             }
+        }
+        
+        private struct IdentifiableAccount: Identifiable {
+            var id = UUID()
+            var account: AccountAsset
         }
     }
     

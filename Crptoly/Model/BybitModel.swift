@@ -13,46 +13,46 @@ private let endpoint = "https://api.bybit.com"
 private let api_key = ApiKey().getStringValue("BybitApiKey")
 private let apiSecret = ApiKey().getStringValue("BybitApiSecret")
 
-class BybitAmount: Amount {
-    var USDJPY = 0.0 // 米ドル円レート: 買気配(Bid)
-    var spot = Amount() // 現物資産
-    var derivatives = Amount() // デリバティブ資産
-    var staking = Amount() // ステーキング資産
-
-    override init() {
-        super.init()
-    }
-    
-    init(USDJPY: Double, spot: Amount, derivatives: Amount, staking: Amount) {
-        self.USDJPY = USDJPY
-        self.spot = spot
-        self.derivatives = derivatives
-        self.staking = staking
-        
-        super.init()
-        self.last = (spot.last + derivatives.last + staking.last) * USDJPY
-        self.open = (spot.open + derivatives.open + staking.open) * USDJPY
-    }
-    
-    var allAmountUSD: Double {
-        return spot.last + derivatives.last + staking.last
-    }
-}
+//class BybitAmount: Amount {
+//    var USDJPY = 0.0 // 米ドル円レート: 買気配(Bid)
+//    var spot = Amount() // 現物資産
+//    var derivatives = Amount() // デリバティブ資産
+//    var staking = Amount() // ステーキング資産
+//
+//    override init() {
+//        super.init()
+//    }
+//
+//    init(USDJPY: Double, spot: Amount, derivatives: Amount, staking: Amount) {
+//        self.USDJPY = USDJPY
+//        self.spot = spot
+//        self.derivatives = derivatives
+//        self.staking = staking
+//
+//        super.init()
+//        self.last = (spot.last + derivatives.last + staking.last) * USDJPY
+//        self.open = (spot.open + derivatives.open + staking.open) * USDJPY
+//    }
+//
+//    var allAmountUSD: Double {
+//        return spot.last + derivatives.last + staking.last
+//    }
+//}
 
 class BybitModel {
-    func fetch(completion: @escaping (BybitAmount) -> ()) {
+    func fetch(completion: @escaping (AccountAsset, Double) -> ()) {
         self.fetchData(completion: { exchangeRate, spotWallet, spotTickers, derivativesWallet in
-            var USDJPY = 0.0
-            let spot = Amount()
-            let derivatives = Amount()
-            let staking = Amount()
+            var rateUSDJPY = 0.0
+            var spot = Asset()
+            var derivatives = Asset()
+            var staking = Asset()
 
             print("--- USDJPY ----------")
             let rates = exchangeRate.quotes
             for rate in rates {
                 if rate.currencyPairCode == "USDJPY" {
-                    USDJPY = Double(rate.bid) ?? 0.0
-                    print("USDJPY: \(USDJPY)")
+                    rateUSDJPY = Double(rate.bid) ?? 0.0
+                    print("USDJPY: \(rateUSDJPY)")
                     break
                 }
             }
@@ -63,66 +63,70 @@ class BybitModel {
                     let symbol = balance.coin + "USDT"
                     for ticker in tickers {
                         if symbol == ticker.symbol {
-                            if let total = Double(balance.total), let lastPrice = Double(ticker.lastPrice), let openPrice = Double(ticker.openPrice) {
-                                let lastAmount = total * lastPrice
-                                let openAmount = total * openPrice
-                                print("coin: \(balance.coin), total: \(balance.total), lastAmount: \(lastAmount), openAmount: \(openAmount)")
-                                spot.last += lastAmount
-                                spot.open += openAmount
-                            }
+                            let symbol = ticker.symbol
+                            let pair = "USDT" // TODO: ハードコード
+                            let lastPrice = Double(ticker.lastPrice) ?? 0.0
+                            let openPrice = Double(ticker.openPrice) ?? 0.0
+                            let ticker = Ticker(symbol: symbol, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
+
+                            let balance = Double(balance.total) ?? 0.0
+                            let coin = Coin(ticker: ticker, balance: balance, dollarBasis: true)
+                            spot.coins.append(coin)
                             break
                         }
                     }
                 }
             }
-            print("spot.lastAmount: \(spot.last), spot.openAmount: \(spot.open)")
+            print("spot.lastAmount: \(spot.lastAmount), spot.openAmount: \(spot.openAmount)")
 
             print("--- delivatives ----------")
             if let coins = derivativesWallet.result {
                 for coin in coins {
+                    var coinSize = 0.0
                     for value in coin.value {
+                        //print("[delivatives] key: \(value.key), value: \(value.value)")
                         if value.key == "equity" {
-                            let equity: Double = value.value
-                            print("\(coin.key): \(equity)")
-                            derivatives.last += equity
-                            // デリバティブはopen値が無いので、とりあえず同じ値を入れておく
-                            derivatives.open = derivatives.last
+                            coinSize = value.value
                             break
                         }
                     }
+                    let coinName = coin.key
+                    derivatives.coins.append(Coin(coinName: coinName, coinSize: coinSize, dollarBasis: true))
                 }
             }
-            print("derivatives.lastAmount: \(derivatives.last)")
+            print("derivatives.lastAmount: \(derivatives.lastAmount)")
 
 
             print("--- staking ----------")
+            // TODO: ハードコード
             // APYは無視して評価額ベースで簡易的に算出
-            // TODO: 設定化
             let coins: Dictionary = ["AVAX": 3.420576]
             for coin in coins {
-                let symbol = coin.key + "USDT"
-                let total = coin.value
-                if let tickers = spotTickers.result {
-                    for ticker in tickers {
-                        if symbol == ticker.symbol {
-                            if let lastPrice = Double(ticker.lastPrice), let openPrice = Double(ticker.openPrice) {
-                                let lastAmount = total * lastPrice
-                                let openAmount = total * openPrice
-                                print("coin: \(coin), total: \(total), lastAmount: \(lastAmount), openAmount: \(openAmount)")
-                                staking.last += lastAmount
-                                staking.open += openAmount
-                            }
-                            break
-                        }
-                    }
-                }
+                let coinName = coin.key
+                let coinSize = coin.value
+                staking.coins.append(Coin(coinName: coinName, coinSize: coinSize))
+
+//                let symbol = coin.key + "USDT"
+//                let balance = coin.value
+//                if let tickers = spotTickers.result {
+//                    for ticker in tickers {
+//                        if symbol == ticker.symbol {
+//                            let symbol = ticker.symbol
+//                            let pair = "USDT" // TODO: ハードコード
+//                            let lastPrice = Double(ticker.lastPrice) ?? 0.0
+//                            let openPrice = Double(ticker.openPrice) ?? 0.0
+//                            let ticker = Ticker(symbol: symbol, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
+//                            staking.coins.append(Coin(ticker: ticker, balance: balance))
+//                            break
+//                        }
+//                    }
+//                }
             }
-            print("staking.lastAmount: \(staking.last), staking.openAmount: \(staking.open)")
+            print("staking.lastAmount: \(staking.lastAmount), staking.openAmount: \(staking.openAmount)")
 
             print("--- total ----------")
-            let wallet = BybitAmount(USDJPY: USDJPY, spot: spot, derivatives: derivatives, staking: staking)
-
-            completion(wallet)
+            let account = AccountAsset(accountName: "ByBit", spot: spot, derivatives: derivatives, staking: staking)
+            completion(account, rateUSDJPY)
         })
     }
 

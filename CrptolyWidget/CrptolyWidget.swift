@@ -12,20 +12,20 @@ import Intents
 
 struct Entry: TimelineEntry {
     var date: Date
-    var wallet: WalletAmount
+    var assets: TotalAssets
 }
 
 struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) {
-        let loadingData = Entry(date: Date(), wallet: WalletAmount())
+        let loadingData = Entry(date: Date(), assets: TotalAssets())
         completion(loadingData)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        let model = WalletModel()
-        model.fetch(completion: { wallet in
+        let model = AssetsModel()
+        model.fetch(completion: { assets in
             let date = Date()
-            let entry = Entry(date: date, wallet: wallet)
+            let entry = Entry(date: date, assets: assets)
             let nextUpdate = Calendar.current.date(byAdding: .minute, value: 10, to: date)
             let timeline = Timeline(entries: [entry], policy: .after(nextUpdate!))
             completion(timeline)
@@ -33,7 +33,7 @@ struct Provider: TimelineProvider {
     }
 
     func placeholder(in context: Context) -> Entry {
-        let loadingData = Entry(date: Date(), wallet: WalletAmount())
+        let loadingData = Entry(date: Date(), assets: TotalAssets())
         return loadingData
     }
 }
@@ -56,51 +56,60 @@ struct WidgetContentView: View {
 
 struct SmallWidgetView: View {
     var entry: Entry
+    var accounts: [IdentifiableAccount] = []
     
+    init(entry: Entry) {
+        self.entry = entry
+        for account in entry.assets.accounts {
+            self.accounts.append(IdentifiableAccount(account: account))
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             Text(entry.date, style: .time)
                 .font(.caption2)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(entry.wallet.equityRatio.toPercentString)
+            Text(entry.assets.equityRatio.toPercentString)
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(entry.wallet.last.toIntegerString)
+            Text(entry.assets.equity.toIntegerString)
                 .font(.caption)
+                .foregroundColor(entry.assets.equity.toColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()
             Divider()
-            Spacer()
-            WalletItemView(amount: entry.wallet.bitbank, image: "bitbank")
-            Spacer()
-            WalletItemView(amount: entry.wallet.bybit, image: "bybit")
+            ForEach(accounts) { account in
+                Spacer()
+                ItemView(item: account)
+            }
         }
         .padding(14)
     }
 
-    private struct WalletItemView: View {
-        let amount: Amount
-        let image: String
+    private struct ItemView: View {
+        let item: IdentifiableAccount
         
         var body: some View {
             GeometryReader { geometry in
                 HStack(spacing: 0) {
-                    Image(image)
+                    Image(item.account.accountName)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(maxWidth: geometry.size.width * 0.15, alignment: .leading)
                         .cornerRadius(4)
-                    Spacer()
-                    Text(amount.lastDelta.toIntegerString)
+                    //Spacer()
+                    Text(item.account.lastAmountDelta.toIntegerString)
                         .font(.caption2)
+                        .foregroundColor(item.account.lastAmountDelta.toColor)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                     Spacer()
-                    Text(amount.lastRatio.toPercentString)
-                        .font(.caption2)
+                    Text(item.account.lastAmountRatio.toPercentString)
+                        .font(.system(size: 11))
                         .foregroundColor(Color.white)
                         .padding(.trailing, 2)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .background(amount.lastRatio.toColor)
+                        .frame(maxWidth: geometry.size.width * 0.32, alignment: .trailing)
+                        .background(item.account.lastAmountRatio.toColor)
                         .cornerRadius(4)
                 }
             }
@@ -110,45 +119,51 @@ struct SmallWidgetView: View {
 
 struct MediumWidgetView: View {
     var entry: Entry
-    
+    var accounts: [IdentifiableAccount] = []
+
+    init(entry: Entry) {
+        self.entry = entry
+        for account in entry.assets.accounts {
+            self.accounts.append(IdentifiableAccount(account: account))
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             Text(entry.date, style: .time)
                 .font(.caption2)
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 0) {
-                Text(entry.wallet.equityRatio.toPercentString)
+                Text(entry.assets.equityRatio.toPercentString)
                     .font(.title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 VStack(spacing: 0) {
-                    Text(entry.wallet.last.toIntegerString)
+                    Text(entry.assets.lastAmount.toIntegerString)
                         .font(.caption)
                         .frame(maxWidth: .infinity, alignment: .trailing)
-                    Text(entry.wallet.equity.toIntegerString)
+                    Text(entry.assets.equity.toIntegerString)
                         .font(.caption)
-                        .foregroundColor(entry.wallet.equity.toColor)
+                        .foregroundColor(entry.assets.equity.toColor)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
             }
-            Spacer()
-            Divider()
-            WalletItemView(amount: entry.wallet.bitbank, image: "bitbank")
-            Spacer()
-            Divider()
-            WalletItemView(amount: entry.wallet.bybit, image: "bybit")
+            ForEach(accounts) { account in
+                Spacer()
+                Divider()
+                ItemView(item: account)
+            }
         }
         .padding(14)
     }
 
-    private struct WalletItemView: View {
-        let amount: Amount
-        let image: String
+    private struct ItemView: View {
+        let item: IdentifiableAccount
         
         var body: some View {
             GeometryReader { geometry in
                 HStack(spacing: 0) {
                     VStack(spacing: 0) {
-                        Image(image)
+                        Image(item.account.accountName)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: geometry.size.width * 0.15, alignment: .leading)
@@ -156,23 +171,23 @@ struct MediumWidgetView: View {
                         Spacer()
                     }
                     VStack(spacing: 0) {
-                        Text(amount.lastDelta.toIntegerString)
+                        Text(item.account.lastAmountDelta.toIntegerString)
                             .font(.caption)
-                            .foregroundColor(amount.lastDelta.toColor)
+                            .foregroundColor(item.account.lastAmountDelta.toColor)
                             .frame(maxWidth: .infinity, alignment: .trailing)
-                        Text(amount.lastRatio.toPercentString)
+                        Text(item.account.lastAmountRatio.toPercentString)
                             .font(.caption)
-                            .foregroundColor(amount.lastRatio.toColor)
+                            .foregroundColor(item.account.lastAmountRatio.toColor)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         Spacer()
                     }
                     VStack(spacing: 0) {
-                        Text(amount.last.toIntegerString)
+                        Text(item.account.lastAmount.toIntegerString)
                             .font(.caption)
                             .frame(maxWidth: .infinity, alignment: .trailing)
-                        Text(amount.equityRatio.toPercentString)
+                        Text(item.account.equityRatio.toPercentString)
                             .font(.caption)
-                            .foregroundColor(amount.equityRatio.toColor)
+                            .foregroundColor(item.account.equityRatio.toColor)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         Spacer()
                     }
@@ -180,6 +195,11 @@ struct MediumWidgetView: View {
             }
         }
     }
+}
+
+struct IdentifiableAccount: Identifiable {
+    var id = UUID()
+    var account: AccountAsset
 }
 
 @main
@@ -196,9 +216,9 @@ struct CrptolyWidget: Widget {
 struct CrptolyWidget_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            WidgetContentView(entry: Entry(date: Date(), wallet: WalletAmount()))
+            WidgetContentView(entry: Entry(date: Date(), assets: TotalAssets()))
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
-            WidgetContentView(entry: Entry(date: Date(), wallet: WalletAmount()))
+            WidgetContentView(entry: Entry(date: Date(), assets: TotalAssets()))
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
         }
     }
