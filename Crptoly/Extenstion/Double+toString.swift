@@ -43,11 +43,13 @@ extension Double {
     }
 
     var toColor: Color {
-        if self >= 0 {
-            let green = Color(red: 36/255, green: 120/255, blue: 74/255)
+        if self == 0 {
+            return Color.primary
+        } else if self > 0 {
+            let green = Color.green // Color(red: 96/255, green: 189/255, blue: 113/255)
             return green
         } else {
-            let red = Color(red: 220/255, green: 43/255, blue: 32/255)
+            let red = Color.red // Color(red: 231/255, green: 101/255, blue: 100/255)
             return red
         }
     }

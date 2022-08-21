@@ -56,12 +56,12 @@ struct WidgetContentView: View {
 
 struct SmallWidgetView: View {
     var entry: Entry
-    var accounts: [IdentifiableAccount] = []
+    var accounts: [IdentifiableAccountAsset] = []
     
     init(entry: Entry) {
         self.entry = entry
         for account in entry.assets.accounts {
-            self.accounts.append(IdentifiableAccount(account: account))
+            self.accounts.append(IdentifiableAccountAsset(account: account))
         }
     }
 
@@ -88,7 +88,7 @@ struct SmallWidgetView: View {
     }
 
     private struct ItemView: View {
-        let item: IdentifiableAccount
+        let item: IdentifiableAccountAsset
         
         var body: some View {
             GeometryReader { geometry in
@@ -119,12 +119,12 @@ struct SmallWidgetView: View {
 
 struct MediumWidgetView: View {
     var entry: Entry
-    var accounts: [IdentifiableAccount] = []
+    var accounts: [IdentifiableAccountAsset] = []
 
     init(entry: Entry) {
         self.entry = entry
         for account in entry.assets.accounts {
-            self.accounts.append(IdentifiableAccount(account: account))
+            self.accounts.append(IdentifiableAccountAsset(account: account))
         }
     }
 
@@ -157,7 +157,7 @@ struct MediumWidgetView: View {
     }
 
     private struct ItemView: View {
-        let item: IdentifiableAccount
+        let item: IdentifiableAccountAsset
         
         var body: some View {
             GeometryReader { geometry in
@@ -197,7 +197,7 @@ struct MediumWidgetView: View {
     }
 }
 
-struct IdentifiableAccount: Identifiable {
+struct IdentifiableAccountAsset: Identifiable {
     var id = UUID()
     var account: AccountAsset
 }
