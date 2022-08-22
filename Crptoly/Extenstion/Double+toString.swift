@@ -18,6 +18,14 @@ extension Double {
         return f.string(from: NSNumber(value: self)) ?? "\(self)"
     }
 
+    var toDecimalP8String: String {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.minimumFractionDigits = 0
+        f.maximumFractionDigits = 8
+        return f.string(from: NSNumber(value: self)) ?? "\(self)"
+    }
+
     var toIntegerString: String {
         let f = NumberFormatter()
         f.numberStyle = .decimal

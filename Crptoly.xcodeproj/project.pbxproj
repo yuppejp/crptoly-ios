@@ -36,6 +36,7 @@
 		5664511A28ACC4CC00FEBB32 /* BybitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664511828ACC4CC00FEBB32 /* BybitModel.swift */; };
 		5664511C28ACC4EB00FEBB32 /* BybitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */; };
 		5664511D28ACC4EB00FEBB32 /* BybitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */; };
+		5680E04A28B3A15D00ACB863 /* AssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5680E04928B3A15D00ACB863 /* AssetView.swift */; };
 		56DE229528ADD4F500832068 /* AssetsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DE229428ADD4F500832068 /* AssetsModel.swift */; };
 		56DE229628ADD4F500832068 /* AssetsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DE229428ADD4F500832068 /* AssetsModel.swift */; };
 /* End PBXBuildFile section */
@@ -86,6 +87,7 @@
 		5617A67328ACBBB900910B9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5664511828ACC4CC00FEBB32 /* BybitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitModel.swift; sourceTree = "<group>"; };
 		5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitResponse.swift; sourceTree = "<group>"; };
+		5680E04928B3A15D00ACB863 /* AssetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetView.swift; sourceTree = "<group>"; };
 		56DE229428ADD4F500832068 /* AssetsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,6 +139,7 @@
 				5617A65728ACB52100910B9E /* Model */,
 				5617A64128AC905F00910B9E /* CrptolyApp.swift */,
 				5617A64328AC905F00910B9E /* ContentView.swift */,
+				5680E04928B3A15D00ACB863 /* AssetView.swift */,
 				5617A64A28AC905F00910B9E /* Persistence.swift */,
 				5617A64528AC905F00910B9E /* Assets.xcassets */,
 				5617A64C28AC905F00910B9E /* Crptoly.xcdatamodeld */,
@@ -317,6 +320,7 @@
 				5617A64428AC905F00910B9E /* ContentView.swift in Sources */,
 				5617A65D28ACB71900910B9E /* ApiKey.swift in Sources */,
 				5617A65B28ACB58E00910B9E /* BitbankResponse.swift in Sources */,
+				5680E04A28B3A15D00ACB863 /* AssetView.swift in Sources */,
 				5664511C28ACC4EB00FEBB32 /* BybitResponse.swift in Sources */,
 				5617A64228AC905F00910B9E /* CrptolyApp.swift in Sources */,
 			);

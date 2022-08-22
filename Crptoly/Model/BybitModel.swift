@@ -60,14 +60,14 @@ class BybitModel {
             print("--- spot ----------")
             if let balances = spotWallet.result?.balances, let tickers = spotTickers.result {
                 for balance in balances {
-                    let symbol = balance.coin + "USDT"
+                    let coinName = balance.coin
+                    let symbol = coinName + "USDT"
                     for ticker in tickers {
                         if symbol == ticker.symbol {
-                            let symbol = ticker.symbol
                             let pair = "USDT" // TODO: ハードコード
                             let lastPrice = Double(ticker.lastPrice) ?? 0.0
                             let openPrice = Double(ticker.openPrice) ?? 0.0
-                            let ticker = Ticker(symbol: symbol, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
+                            let ticker = Ticker(symbol: coinName, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
 
                             let balance = Double(balance.total) ?? 0.0
                             let coin = Coin(ticker: ticker, balance: balance, dollarBasis: true)
@@ -103,24 +103,20 @@ class BybitModel {
             let coins: Dictionary = ["AVAX": 3.420576]
             for coin in coins {
                 let coinName = coin.key
-                let coinSize = coin.value
-                staking.coins.append(Coin(coinName: coinName, coinSize: coinSize))
-
-//                let symbol = coin.key + "USDT"
-//                let balance = coin.value
-//                if let tickers = spotTickers.result {
-//                    for ticker in tickers {
-//                        if symbol == ticker.symbol {
-//                            let symbol = ticker.symbol
-//                            let pair = "USDT" // TODO: ハードコード
-//                            let lastPrice = Double(ticker.lastPrice) ?? 0.0
-//                            let openPrice = Double(ticker.openPrice) ?? 0.0
-//                            let ticker = Ticker(symbol: symbol, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
-//                            staking.coins.append(Coin(ticker: ticker, balance: balance))
-//                            break
-//                        }
-//                    }
-//                }
+                let symbol = coinName + "USDT"
+                let balance = coin.value
+                if let tickers = spotTickers.result {
+                    for ticker in tickers {
+                        if symbol == ticker.symbol {
+                            let pair = "USDT" // TODO: ハードコード
+                            let lastPrice = Double(ticker.lastPrice) ?? 0.0
+                            let openPrice = Double(ticker.openPrice) ?? 0.0
+                            let ticker = Ticker(symbol: coinName, pair: pair, lastPrice: lastPrice, openPrice: openPrice)
+                            staking.coins.append(Coin(ticker: ticker, balance: balance, dollarBasis: true))
+                            break
+                        }
+                    }
+                }
             }
             print("staking.lastAmount: \(staking.lastAmount), staking.openAmount: \(staking.openAmount)")
 
