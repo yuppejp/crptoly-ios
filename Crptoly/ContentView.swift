@@ -24,20 +24,6 @@ let coloredNavAppearance = UINavigationBarAppearance()
 struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
     
-//    init() {
-////        coloredNavAppearance.configureWithOpaqueBackground()
-////        coloredNavAppearance.backgroundColor = UIColor.init(red: 52/255, green: 58/255, blue: 75/255, alpha: 1.0)
-////        coloredNavAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-////        coloredNavAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-////        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
-////        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
-////        UINavigationBar.appearance().barTintColor = UIColor.init(red: 52/255, green: 58/255, blue: 75/255, alpha: 1.0)
-//
-//        //        UINavigationBar.appearance().backgroundColor = .blue // 背景色
-//        //        UINavigationBar.appearance().largeTitleTextAttributes = [ .foregroundColor: UIColor.white] // タイトル色
-//        //        UINavigationBar.appearance().tintColor = .white // backボタン色
-//    }
-    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -92,6 +78,9 @@ struct ContentView: View {
                         ListItemView(name: "増減率", value: account.account.lastAmountRatio.toPercentString)
                         AssetsView(spot: account.account.spot, derivatives: account.account.derivatives, staking: account.account.staking)
                     }
+                }
+                Section(header: Text("為替レート")) {
+                    ListItemView(name: "USD/JPY", value: CurrencyExchange.share.USDJPY.toDecimalString + " 円")
                 }
             }
         }
