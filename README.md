@@ -5,7 +5,7 @@
 ### bitbank
 - 現物
 
-### bitbank
+### bybit
 - 現物
 - デリバティブ(USDTペアのみ)
 
