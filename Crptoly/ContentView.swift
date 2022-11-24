@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreData
+import WidgetKit
 
 class ContentViewModel: ObservableObject {
     private let model = AssetsModel()
@@ -22,8 +23,9 @@ class ContentViewModel: ObservableObject {
 
 let coloredNavAppearance = UINavigationBarAppearance()
 struct ContentView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject var viewModel = ContentViewModel()
-    
+
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -47,6 +49,10 @@ struct ContentView: View {
             }
         }.onAppear {
             viewModel.update()
+        }
+        .onChange(of: scenePhase) { phase in
+            // nofification to widget
+            WidgetCenter.shared.reloadTimelines(ofKind: "jp.yuppe.crptoly.widget")
         }
     }
     

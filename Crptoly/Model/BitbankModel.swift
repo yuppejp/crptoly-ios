@@ -123,6 +123,8 @@ struct BitbankModel {
         let url = URL(string: urlString)!
         var request = URLRequest(url: url)
         
+        print("[getTickers] urlString:", urlString)
+        
         request.httpMethod = "GET"
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, err) in

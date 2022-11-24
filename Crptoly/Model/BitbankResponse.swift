@@ -15,14 +15,16 @@ struct BitbankTickersResponse: Codable {
 }
 
 struct BitbankTicker: Codable {
-    let pair, sell, buy, high: String
-    let low, datumOpen, last, vol: String
+    let pair: String
+    let sell: String?
+    let buy, datumOpen, high, low: String
+    let last, vol: String
     let timestamp: Int
 
     enum CodingKeys: String, CodingKey {
-        case pair, sell, buy, high, low
+        case pair, sell, buy
         case datumOpen = "open"
-        case last, vol, timestamp
+        case high, low, last, vol, timestamp
     }
 }
 

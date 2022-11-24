@@ -26,7 +26,7 @@ struct Provider: TimelineProvider {
         model.fetch(completion: { assets in
             let date = Date()
             let entry = Entry(date: date, assets: assets)
-            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 10, to: date)
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: date)
             let timeline = Timeline(entries: [entry], policy: .after(nextUpdate!))
             completion(timeline)
         })
@@ -67,9 +67,12 @@ struct SmallWidgetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(entry.date, style: .time)
-                .font(.caption2)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text(entry.date, style: .time)
+                    .font(.caption2)
+                Text(entry.date, style: .offset)
+                    .font(.caption2)
+            }
             Text(entry.assets.equityRatio.toPercentString)
                 .font(.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -130,9 +133,12 @@ struct MediumWidgetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(entry.date, style: .time)
-                .font(.caption2)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text(entry.date, style: .time)
+                    .font(.caption2)
+                Text(entry.date, style: .offset)
+                    .font(.caption2)
+            }
             HStack(spacing: 0) {
                 Text(entry.assets.equityRatio.toPercentString)
                     .font(.title)
@@ -205,7 +211,7 @@ struct IdentifiableAccountAsset: Identifiable {
 @main
 struct CrptolyWidget: Widget {
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: "Kind", provider: Provider(), content: { entry in
+        StaticConfiguration(kind: "jp.yuppe.crptoly.widget", provider: Provider(), content: { entry in
             WidgetContentView(entry: entry)
         }).description(Text("保有コイン数から現在の評価額を表示します"))
             .configurationDisplayName(Text("運用資産の概算"))
@@ -223,6 +229,7 @@ struct CrptolyWidget_Previews: PreviewProvider {
         }
     }
 }
+
 //struct Provider: IntentTimelineProvider {
 //    func placeholder(in context: Context) -> SimpleEntry {
 //        SimpleEntry(date: Date(), configuration: ConfigurationIntent())

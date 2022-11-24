@@ -135,14 +135,14 @@
 		5617A64028AC905F00910B9E /* Crptoly */ = {
 			isa = PBXGroup;
 			children = (
-				5617A66028ACB7BD00910B9E /* Extenstion */,
-				5617A65728ACB52100910B9E /* Model */,
-				5617A64128AC905F00910B9E /* CrptolyApp.swift */,
-				5617A64328AC905F00910B9E /* ContentView.swift */,
 				5680E04928B3A15D00ACB863 /* AssetView.swift */,
+				5617A64328AC905F00910B9E /* ContentView.swift */,
+				5617A64128AC905F00910B9E /* CrptolyApp.swift */,
 				5617A64A28AC905F00910B9E /* Persistence.swift */,
 				5617A64528AC905F00910B9E /* Assets.xcassets */,
 				5617A64C28AC905F00910B9E /* Crptoly.xcdatamodeld */,
+				5617A66028ACB7BD00910B9E /* Extenstion */,
+				5617A65728ACB52100910B9E /* Model */,
 				5617A64728AC905F00910B9E /* Preview Content */,
 			);
 			path = Crptoly;
@@ -159,13 +159,13 @@
 		5617A65728ACB52100910B9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5617A65E28ACB73C00910B9E /* ApiKey.plist */,
+				5617A65C28ACB71900910B9E /* ApiKey.swift */,
 				56DE229428ADD4F500832068 /* AssetsModel.swift */,
 				5617A65828ACB53200910B9E /* BitbankModel.swift */,
 				5617A65A28ACB58E00910B9E /* BitbankResponse.swift */,
 				5664511828ACC4CC00FEBB32 /* BybitModel.swift */,
 				5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */,
-				5617A65C28ACB71900910B9E /* ApiKey.swift */,
-				5617A65E28ACB73C00910B9E /* ApiKey.plist */,
 			);
 			path = Model;
 			sourceTree = "<group>";
