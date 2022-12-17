@@ -204,6 +204,9 @@ class BybitModel {
                 completion(result)
             }
             catch {
+                let jsonString = String(bytes: data!, encoding: .utf8)!
+                
+                print("[ByBit@fetchSpotWalletBalance] data: \(jsonString)")
                 print(error.localizedDescription)
             }
         })
