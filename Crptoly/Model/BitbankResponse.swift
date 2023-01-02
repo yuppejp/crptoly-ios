@@ -16,8 +16,8 @@ struct BitbankTickersResponse: Codable {
 
 struct BitbankTicker: Codable {
     let pair: String
-    let sell: String?
-    let buy, datumOpen, high, low: String
+    let sell, buy: String?
+    let datumOpen, high, low: String
     let last, vol: String
     let timestamp: Int
 

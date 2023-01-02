@@ -142,6 +142,10 @@ struct BitbankModel {
             }
             catch {
                 print(error.localizedDescription)
+                
+                if let jsonString = String(data: data!, encoding: .utf8) {
+                    print(jsonString)
+                }
             }
         }
         task.resume()
