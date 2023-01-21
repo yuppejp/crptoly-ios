@@ -54,6 +54,7 @@ struct ContentView: View {
             // nofification to widget
             WidgetCenter.shared.reloadTimelines(ofKind: "jp.yuppe.crptoly.widget")
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     private struct TotalAssetsView: View {
