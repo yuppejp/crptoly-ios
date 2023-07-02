@@ -85,6 +85,7 @@
 		5617A67028ACBBB800910B9E /* CrptolyWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = CrptolyWidget.intentdefinition; sourceTree = "<group>"; };
 		5617A67128ACBBB900910B9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5617A67328ACBBB900910B9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		563D17CA297C121400829C53 /* CrptolyWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CrptolyWidgetExtension.entitlements; sourceTree = "<group>"; };
 		5664511828ACC4CC00FEBB32 /* BybitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitModel.swift; sourceTree = "<group>"; };
 		5664511B28ACC4EB00FEBB32 /* BybitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BybitResponse.swift; sourceTree = "<group>"; };
 		5680E04928B3A15D00ACB863 /* AssetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetView.swift; sourceTree = "<group>"; };
@@ -116,6 +117,7 @@
 		5617A63528AC905F00910B9E = {
 			isa = PBXGroup;
 			children = (
+				563D17CA297C121400829C53 /* CrptolyWidgetExtension.entitlements */,
 				5617A64028AC905F00910B9E /* Crptoly */,
 				5617A66D28ACBBB800910B9E /* CrptolyWidget */,
 				5617A66828ACBBB800910B9E /* Frameworks */,
@@ -477,7 +479,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Crptoly/Preview Content\"";
-				DEVELOPMENT_TEAM = 358F964YVR;
+				DEVELOPMENT_TEAM = 39XWXK5875;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -510,7 +512,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Crptoly/Preview Content\"";
-				DEVELOPMENT_TEAM = 358F964YVR;
+				DEVELOPMENT_TEAM = 39XWXK5875;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -538,10 +540,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CrptolyWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 358F964YVR;
+				DEVELOPMENT_TEAM = 39XWXK5875;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CrptolyWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CrptolyWidget;
@@ -555,9 +558,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.yuppe.crptoly.CrptolyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -566,6 +570,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CrptolyWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -583,9 +588,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.yuppe.crptoly.CrptolyWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};

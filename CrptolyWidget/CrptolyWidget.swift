@@ -26,8 +26,12 @@ struct Provider: TimelineProvider {
         model.fetch(completion: { assets in
             let date = Date()
             let entry = Entry(date: date, assets: assets)
-            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: date)
-            let timeline = Timeline(entries: [entry], policy: .after(nextUpdate!))
+
+            //let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: date)
+            //let timeline = Timeline(entries: [entry], policy: .after(nextUpdate!))
+
+            let timeline = Timeline(entries: [entry], policy: .atEnd)
+
             completion(timeline)
         })
     }
