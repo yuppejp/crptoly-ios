@@ -100,6 +100,7 @@ struct SmallWidgetView: View {
         var body: some View {
             GeometryReader { geometry in
                 HStack(spacing: 0) {
+                    let _ = print("*** accountName: " + item.account.accountName)
                     Image(item.account.accountName)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
