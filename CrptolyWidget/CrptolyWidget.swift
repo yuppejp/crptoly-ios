@@ -91,6 +91,7 @@ struct SmallWidgetView: View {
                 ItemView(item: account)
             }
         }
+        .widgetBackground(backgroundView: Color.clear) // add for iOS 17
         .padding(14)
     }
 
@@ -221,6 +222,7 @@ struct CrptolyWidget: Widget {
         }).description(Text("保有コイン数から現在の評価額を表示します"))
             .configurationDisplayName(Text("運用資産の概算"))
             .supportedFamilies([.systemSmall, .systemMedium])
+            .contentMarginsDisabled() // Xcode15ビルドの余白を無視する
     }
 }
 
@@ -231,6 +233,21 @@ struct CrptolyWidget_Previews: PreviewProvider {
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
             WidgetContentView(entry: Entry(date: Date(), assets: TotalAssets()))
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
+        }
+    }
+}
+
+// add for iOS 17
+// https://nemecek.be/blog/192/hotfixing-widgets-for-ios-17-containerbackground-padding
+// https://www.reddit.com/r/SwiftUI/comments/15iahj8/please_adopt_containerbackground_api/?rdt=54594
+extension View {
+    func widgetBackground(backgroundView: some View) -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            return containerBackground(for: .widget) {
+                backgroundView
+            }
+        } else {
+            return background(backgroundView)
         }
     }
 }
