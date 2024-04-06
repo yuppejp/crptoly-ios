@@ -77,13 +77,18 @@ struct SmallWidgetView: View {
                 Text(entry.date, style: .offset)
                     .font(.caption2)
             }
-            Text(entry.assets.equityRatio.toPercentString)
-                .font(.title3)
-                .frame(maxWidth: .infinity, alignment: .leading)
             Text(entry.assets.lastAmount.toIntegerString)
                 .font(.title2)
                 .foregroundColor(entry.assets.equity.toColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text((entry.assets.equity >= 0 ? "+" : "-") + entry.assets.equity.toIntegerString)
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(entry.assets.equityRatio.toPercentString)
+                    .font(.caption)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
             Spacer()
             Divider()
             ForEach(accounts) { account in
