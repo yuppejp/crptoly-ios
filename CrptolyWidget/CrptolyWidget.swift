@@ -87,7 +87,6 @@ struct SmallWidgetView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(entry.assets.equityRatio.toPercentString)
                     .font(.caption)
-                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             Spacer()
             Divider()
