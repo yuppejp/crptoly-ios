@@ -78,10 +78,10 @@ struct SmallWidgetView: View {
                     .font(.caption2)
             }
             Text(entry.assets.equityRatio.toPercentString)
-                .font(.title)
+                .font(.title3)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(entry.assets.equity.toIntegerString)
-                .font(.caption)
+            Text(entry.assets.lastAmount.toIntegerString)
+                .font(.title2)
                 .foregroundColor(entry.assets.equity.toColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()

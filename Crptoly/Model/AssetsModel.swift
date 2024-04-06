@@ -271,16 +271,17 @@ struct AssetsModel {
             })
         }
 
-        dispatchGroup.enter()
-        dispatchQueue.async {
-            print("[WalletBalanceModel#fetch] 2: enter")
-            BybitModel().fetch(completion: { result, rate in
-                bybit = result
-                CurrencyExchange.share.USDJPY = rate
-                dispatchGroup.leave()
-                print("[WalletBalanceModel#fetch]: leave")
-            })
-        }
+// TODO: debug
+//        dispatchGroup.enter()
+//        dispatchQueue.async {
+//            print("[WalletBalanceModel#fetch] 2: enter")
+//            BybitModel().fetch(completion: { result, rate in
+//                bybit = result
+//                CurrencyExchange.share.USDJPY = rate
+//                dispatchGroup.leave()
+//                print("[WalletBalanceModel#fetch]: leave")
+//            })
+//        }
         
         dispatchGroup.notify(queue: .main) {
             print("[WalletBalanceModel#fetch] completion")
