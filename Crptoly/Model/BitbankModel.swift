@@ -101,15 +101,22 @@ struct BitbankModel {
                 print(err!.localizedDescription)
                 return
             }
+            
+            guard let data = data else {
+                print("[BitbankModel:getUserAssets] no data")
+                return
+            }
+            
             do {
                 // debug print
-                //let object = try JSONSerialization.jsonObject(with: data!, options: [])
+                //let object = try JSONSerialization.jsonObject(with: data, options: [])
                 //print(object)
 
-                let result = try JSONDecoder().decode(BitbankUserAssetsResponse.self, from: data!)
+                let result = try JSONDecoder().decode(BitbankUserAssetsResponse.self, from: data)
                 completion(result)
             }
             catch {
+                print("[BitbankModel:getUserAssets] decode error: ")
                 print(error.localizedDescription)
             }
         }
