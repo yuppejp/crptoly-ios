@@ -79,14 +79,16 @@ struct SmallWidgetView: View {
             }
             Text(entry.assets.lastAmount.toIntegerString)
                 .font(.title2)
-                .foregroundColor(entry.assets.equity.toColor)
+                //.foregroundColor(entry.assets.equity.toColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack {
                 Text((entry.assets.equity >= 0 ? "+" : "-") + entry.assets.equity.toIntegerString)
                     .font(.caption)
+                    .foregroundColor(entry.assets.equity.toColor)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(entry.assets.equityRatio.toPercentString)
                     .font(.caption)
+                    .foregroundColor(entry.assets.equityRatio.toColor)
             }
             Spacer()
             Divider()
@@ -118,12 +120,15 @@ struct SmallWidgetView: View {
                         .frame(maxWidth: .infinity, alignment: .trailing)
                     Spacer()
                     Text(item.account.lastAmountRatio.toPercentString)
-                        .font(.system(size: 11))
-                        .foregroundColor(Color.white)
-                        .padding(.trailing, 2)
-                        .frame(maxWidth: geometry.size.width * 0.32, alignment: .trailing)
-                        .background(item.account.lastAmountRatio.toColor)
-                        .cornerRadius(4)
+                        .font(.caption2)
+                        .foregroundColor(item.account.lastAmountRatio.toColor)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        //.font(.system(size: 11))
+                        //.foregroundColor(Color.white)
+                        //.padding(.trailing, 2)
+                        //.frame(maxWidth: geometry.size.width * 0.32, alignment: .trailing)
+                        //.background(item.account.lastAmountRatio.toColor)
+                        //.cornerRadius(4)
                 }
             }
         }
